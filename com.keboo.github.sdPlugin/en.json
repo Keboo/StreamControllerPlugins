@@ -1,0 +1,15 @@
+{
+  "Name": "Open GitHub Repo",
+  "Description": "A plugin that opens a GitHub repository when pressed",
+  "Category": "Keboo GitHub",
+  "Actions": {
+    "com.keboo.github.action": {
+      "Name": "Open GitHub Repo",
+      "Tooltip": "Opens a GitHub repository in your browser"
+    }
+  },
+  "PropertyInspector": {
+    "Owner": "Owner",
+    "Repo": "Repository"
+  }
+}

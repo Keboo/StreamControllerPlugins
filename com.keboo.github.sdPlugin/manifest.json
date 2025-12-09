@@ -1,0 +1,46 @@
+{
+  "Actions": [
+    {
+      "Icon": "static/icon",
+      "Name": "Open GitHub Repo",
+      "States": [
+        {
+          "FontSize": "10",
+          "TitleAlignment": "bottom",
+          "Image": "static/icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "Tooltip": "Opens a GitHub repository in your browser",
+      "UUID": "com.keboo.github.action",
+      "PropertyInspectorPath": "propertyInspector/action/index.html"
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "Keboo",
+  "Name": "Open GitHub Repo",
+  "Icon": "static/icon",
+  "CodePath": "plugin/index.html",
+  "Description": "A plugin that opens a GitHub repository when pressed",
+  "Category": "Keboo GitHub",
+  "CategoryIcon": "static/icon",
+  "Version": "1.0.0",
+  "URL": "https://keboo.dev",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "7"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "2.9"
+  }
+}
