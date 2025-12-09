@@ -18,6 +18,25 @@
       "Tooltip": "Opens a GitHub repository in your browser",
       "UUID": "com.keboo.github.action",
       "PropertyInspectorPath": "propertyInspector/action/index.html"
+    },
+    {
+      "Icon": "static/pr-icon",
+      "Name": "PR Count",
+      "States": [
+        {
+          "FontSize": "16",
+          "TitleAlignment": "middle",
+          "Image": "static/pr-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the number of open PRs in a GitHub repository",
+      "UUID": "com.keboo.github.prcount",
+      "PropertyInspectorPath": "propertyInspector/prcount/index.html"
     }
   ],
   "SDKVersion": 1,

@@ -6,10 +6,15 @@
     "com.keboo.github.action": {
       "Name": "Open GitHub Repo",
       "Tooltip": "Opens a GitHub repository in your browser"
+    },
+    "com.keboo.github.prcount": {
+      "Name": "PR Count",
+      "Tooltip": "Displays the number of open PRs in a GitHub repository"
     }
   },
   "PropertyInspector": {
     "Owner": "Owner",
-    "Repo": "Repository"
+    "Repo": "Repository",
+    "Token": "Token"
   }
 }

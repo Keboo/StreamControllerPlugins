@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="20" fill="#1a1a2e"/>
+  <!-- PR icon - git pull request -->
+  <circle cx="50" cy="45" r="10" fill="none" stroke="#4a9eff" stroke-width="4"/>
+  <circle cx="50" cy="99" r="10" fill="none" stroke="#4a9eff" stroke-width="4"/>
+  <circle cx="94" cy="99" r="10" fill="none" stroke="#4a9eff" stroke-width="4"/>
+  <line x1="50" y1="55" x2="50" y2="89" stroke="#4a9eff" stroke-width="4"/>
+  <path d="M94 55 L94 75 Q94 85 84 89 L60 89" fill="none" stroke="#4a9eff" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="94" cy="45" r="10" fill="none" stroke="#4a9eff" stroke-width="4"/>
+</svg>
