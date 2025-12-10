@@ -12,6 +12,7 @@ const $local = false, $back = false, $dom = {
     token: $('#token'),
     refreshInterval: $('#refreshInterval'),
     excludeUsers: $('#excludeUsers'),
+    includeDrafts: $('#includeDrafts'),
     tokenLink: $('#tokenLink')
 };
 
@@ -24,6 +25,7 @@ const $propEvent = {
         $dom.token.value = settings.token || '';
         $dom.refreshInterval.value = settings.refreshInterval || 5;
         $dom.excludeUsers.value = settings.excludeUsers || '';
+        $dom.includeDrafts.checked = settings.includeDrafts || false;
     },
     sendToPropertyInspector(data) { }
 };
@@ -54,6 +56,11 @@ $dom.refreshInterval.addEventListener('input', $.debounce(function() {
 $dom.excludeUsers.addEventListener('input', $.debounce(function() {
     $settings.excludeUsers = $dom.excludeUsers.value;
 }, 300));
+
+// Save settings when include drafts changes
+$dom.includeDrafts.addEventListener('change', function() {
+    $settings.includeDrafts = $dom.includeDrafts.checked;
+});
 
 // Open Azure DevOps PAT settings when token link is clicked
 $dom.tokenLink.addEventListener('click', function(e) {

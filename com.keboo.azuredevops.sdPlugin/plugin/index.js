@@ -9,9 +9,11 @@ plugin.prcount = new Actions({
         project: "",
         token: "",
         refreshInterval: 5,
-        excludeUsers: ""
+        excludeUsers: "",
+        includeDrafts: false
     },
     intervals: {},
+    cachedPRs: {},
     
     _willAppear({ context }) {
         const settings = this.data[context] || {};
@@ -47,14 +49,20 @@ plugin.prcount = new Actions({
     },
     
     keyUp(data) {
-        // Open the PRs page when button is pressed
+        // Open the PRs page for the first repository with a matching PR
         const { context } = data;
         const settings = this.data[context] || {};
         const org = settings.organization || "";
         const project = settings.project || "";
+        const cachedPRs = this.cachedPRs[context] || [];
         
-        if (org && project) {
-            window.socket.openUrl(`https://dev.azure.com/${org}/${project}/_git/pullrequests`);
+        // Only open if there are matching PRs
+        if (org && project && cachedPRs.length > 0) {
+            const firstPR = cachedPRs[0];
+            const repoName = firstPR.repository?.name || '';
+            if (repoName) {
+                window.socket.openUrl(`https://dev.azure.com/${org}/${project}/_git/${repoName}/pullrequests?_a=active`);
+            }
         }
     },
     
@@ -69,6 +77,7 @@ plugin.prcount = new Actions({
         const project = settings.project || "";
         const token = settings.token || "";
         const excludeUsers = settings.excludeUsers || "";
+        const includeDrafts = settings.includeDrafts || false;
         
         if (!org || !project || !token) {
             window.socket.setTitle(context, "PR\n--");
@@ -104,10 +113,18 @@ plugin.prcount = new Actions({
             const data = await response.json();
             let pullRequests = data.value || [];
             
+            // Filter out draft PRs unless includeDrafts is true
+            if (!includeDrafts) {
+                pullRequests = pullRequests.filter(pr => !pr.isDraft);
+            }
+            
             // Filter out PRs if we have excluded users
             if (excludedUsersList.length > 0) {
                 pullRequests = await this.filterExcludedPRs(pullRequests, excludedUsersList, org, headers);
             }
+            
+            // Cache the filtered PRs for use in keyUp
+            this.cachedPRs[context] = pullRequests;
             
             const count = pullRequests.length;
             
