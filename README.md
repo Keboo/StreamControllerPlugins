@@ -36,12 +36,36 @@ A simple Stream Dock plugin that opens a GitHub repository in your browser when 
 
 ## Development
 
+### Deployment
+
+Use the included PowerShell script to deploy all plugins:
+
+```powershell
+.\deploy.ps1
+```
+
+This script will:
+1. Find all `.sdPlugin` folders in the project
+2. Stop Stream Controller if running
+3. Copy plugins to `%APPDATA%\HotSpot\StreamDock\plugins`
+4. Restart Stream Controller
+
 ### Debugging
 
-After installing the plugin, you can debug it by navigating to:
-```
-http://localhost:23519/
-```
+After installing the plugin, you can debug it using Chrome DevTools:
+
+1. **Open the debug URL**: Navigate to `http://localhost:23519/` in your browser
+2. **Select your plugin**: You'll see a list of available plugin contexts
+3. **Inspect elements**: Use the DevTools to inspect HTML, CSS, and JavaScript
+4. **View console logs**: Check `console.log()` output and errors
+5. **Hot reload**: Make changes to your plugin code and refresh to see updates without restarting Stream Dock
+
+#### Debug Tips
+
+- **Plugin not appearing?** Restart Stream Dock after adding a new plugin for the first time
+- **Property Inspector issues?** Select the PI context separately from the main plugin context
+- **Network requests**: Use the Network tab to debug GitHub API calls
+- **Breakpoints**: Set breakpoints in your JavaScript code to step through execution
 
 ### Project Structure
 

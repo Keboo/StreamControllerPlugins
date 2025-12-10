@@ -17,21 +17,6 @@
         </div>
         
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Repository</div>
-            <input class="sdpi-item-value" type="text" id="repo" placeholder="e.g. dotnetconf">
-        </div>
-        
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Workflow</div>
-            <input class="sdpi-item-value" type="text" id="workflow" placeholder="e.g. build.yml (optional)">
-        </div>
-        
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Branch</div>
-            <input class="sdpi-item-value" type="text" id="branch" placeholder="e.g. main (optional)">
-        </div>
-        
-        <div class="sdpi-item">
             <div class="sdpi-item-label"><a href="#" id="tokenLink" style="color: #7397d2; text-decoration: none;">Token</a></div>
             <input class="sdpi-item-value" type="password" id="token" placeholder="Optional: GitHub PAT">
         </div>
@@ -42,10 +27,64 @@
             <span style="margin-left: 8px; color: #9a9a9a;">minutes (1-60)</span>
         </div>
         
-        <div class="sdpi-item" type="group">
+        <!-- Workflow 1 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Workflow 1 (Required)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Repository</div>
+            <input class="sdpi-item-value" type="text" id="repo1" placeholder="e.g. dotnetconf">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Workflow</div>
+            <input class="sdpi-item-value" type="text" id="workflow1" placeholder="e.g. build.yml (optional)">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch1" placeholder="e.g. main (optional)">
+        </div>
+        
+        <!-- Workflow 2 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Workflow 2 (Optional)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Repository</div>
+            <input class="sdpi-item-value" type="text" id="repo2" placeholder="e.g. other-repo">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Workflow</div>
+            <input class="sdpi-item-value" type="text" id="workflow2" placeholder="e.g. ci.yml (optional)">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch2" placeholder="e.g. main (optional)">
+        </div>
+        
+        <!-- Workflow 3 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Workflow 3 (Optional)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Repository</div>
+            <input class="sdpi-item-value" type="text" id="repo3" placeholder="e.g. another-repo">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Workflow</div>
+            <input class="sdpi-item-value" type="text" id="workflow3" placeholder="e.g. test.yml (optional)">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch3" placeholder="e.g. main (optional)">
+        </div>
+        
+        <div class="sdpi-item" type="group" style="margin-top: 16px;">
             <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value">
-                <small>Token is optional but recommended to avoid rate limits. Workflow can be the filename (e.g. build.yml) or workflow ID.</small>
+                <small>All workflows share the same owner. Token is optional but recommended to avoid rate limits. Status indicators: 1 workflow = bottom-right, 2 = bottom-left + right, 3 = left + center + right.</small>
             </div>
         </div>
     </div>

@@ -119,7 +119,8 @@ plugin.prcount = new Actions({
             };
             
             if (token) {
-                headers['Authorization'] = `token ${token}`;
+                // Use Bearer for both fine-grained PATs (github_pat_) and classic PATs (ghp_)
+                headers['Authorization'] = `Bearer ${token}`;
             }
             
             // Fetch repo info to get owner avatar
@@ -223,13 +224,23 @@ plugin.prcount = new Actions({
 plugin.actionstatus = new Actions({
     default: {
         owner: "",
-        repo: "",
-        workflow: "",
-        branch: "",
+        // Workflow 1
+        repo1: "",
+        workflow1: "",
+        branch1: "",
+        // Workflow 2
+        repo2: "",
+        workflow2: "",
+        branch2: "",
+        // Workflow 3
+        repo3: "",
+        workflow3: "",
+        branch3: "",
         token: "",
         refreshInterval: 5
     },
     intervals: {},
+    cachedStatuses: {},
     
     _willAppear({ context }) {
         const settings = this.data[context] || {};
@@ -241,13 +252,29 @@ plugin.actionstatus = new Actions({
         this.stopRefreshInterval(context);
     },
     
+    sendToPlugin(data) {
+        // Handle messages from Property Inspector
+        const { context, payload } = data;
+        if (payload?.action === 'refresh') {
+            // Trigger immediate refresh when settings change
+            this.fetchAndDisplayStatus(context, this.data[context] || {});
+        }
+    },
+    
     didReceiveSettings(data) {
         const { context, payload: { settings } } = data;
-        this.data[context] = Object.assign({ ...this.default }, settings);
-        this.fetchAndDisplayStatus(context, settings);
+        // Support legacy settings migration
+        const migratedSettings = { ...settings };
+        if (settings.repo && !settings.repo1) {
+            migratedSettings.repo1 = settings.repo;
+            migratedSettings.workflow1 = settings.workflow || '';
+            migratedSettings.branch1 = settings.branch || '';
+        }
+        this.data[context] = Object.assign({ ...this.default }, migratedSettings);
+        this.fetchAndDisplayStatus(context, this.data[context]);
         // Restart interval with new settings
         this.stopRefreshInterval(context);
-        this.startRefreshInterval(context, settings);
+        this.startRefreshInterval(context, this.data[context]);
     },
     
     startRefreshInterval(context, settings) {
@@ -265,26 +292,70 @@ plugin.actionstatus = new Actions({
     },
     
     keyUp(data) {
-        // Open the Actions page when button is pressed
+        // Open the Actions page for the workflow with the highest priority status
+        // Priority: failure > cancelled/skipped/none > in_progress/queued/waiting > success
         const { context } = data;
         const settings = this.data[context] || {};
         const owner = settings.owner || "";
-        const repo = settings.repo || "";
-        const workflow = settings.workflow || "";
-        const branch = settings.branch || "";
         
-        if (owner && repo) {
+        const workflows = this.getConfiguredWorkflows(settings);
+        if (!owner || workflows.length === 0) return;
+        
+        // Get cached statuses or default to opening first workflow
+        const cachedStatuses = this.cachedStatuses?.[context] || [];
+        
+        // Find the workflow to open based on priority
+        const workflowToOpen = this.getHighestPriorityWorkflow(workflows, cachedStatuses);
+        
+        if (workflowToOpen) {
             let url;
-            if (workflow) {
-                url = `https://github.com/${owner}/${repo}/actions/workflows/${workflow}`;
+            if (workflowToOpen.workflow) {
+                url = `https://github.com/${owner}/${workflowToOpen.repo}/actions/workflows/${workflowToOpen.workflow}`;
             } else {
-                url = `https://github.com/${owner}/${repo}/actions`;
+                url = `https://github.com/${owner}/${workflowToOpen.repo}/actions`;
             }
-            if (branch) {
-                url += `?query=branch%3A${encodeURIComponent(branch)}`;
+            if (workflowToOpen.branch) {
+                url += `?query=branch%3A${encodeURIComponent(workflowToOpen.branch)}`;
             }
             window.socket.openUrl(url);
         }
+    },
+    
+    getHighestPriorityWorkflow(workflows, statuses) {
+        // Priority levels (lower number = higher priority)
+        const getPriority = (status) => {
+            switch (status) {
+                case 'failure': return 1;
+                case 'cancelled':
+                case 'skipped':
+                case 'none':
+                case 'unknown': return 2;
+                case 'in_progress':
+                case 'queued':
+                case 'waiting': return 3;
+                case 'success': return 4;
+                default: return 5;
+            }
+        };
+        
+        // If no statuses cached, return first workflow
+        if (statuses.length === 0) {
+            return workflows[0];
+        }
+        
+        // Find workflow with highest priority (lowest number)
+        let bestIndex = 0;
+        let bestPriority = getPriority(statuses[0]);
+        
+        for (let i = 1; i < workflows.length && i < statuses.length; i++) {
+            const priority = getPriority(statuses[i]);
+            if (priority < bestPriority) {
+                bestPriority = priority;
+                bestIndex = i;
+            }
+        }
+        
+        return workflows[bestIndex];
     },
     
     keyDown(data) {
@@ -293,14 +364,35 @@ plugin.actionstatus = new Actions({
         this.fetchAndDisplayStatus(context, this.data[context] || {});
     },
     
+    getConfiguredWorkflows(settings) {
+        // Build array of configured workflows (those with at least a repo)
+        const workflows = [];
+        
+        // Support legacy settings
+        const repo1 = settings.repo1 || settings.repo || "";
+        const workflow1 = settings.workflow1 || settings.workflow || "";
+        const branch1 = settings.branch1 || settings.branch || "";
+        
+        if (repo1) {
+            workflows.push({ repo: repo1, workflow: workflow1, branch: branch1 });
+        }
+        if (settings.repo2) {
+            workflows.push({ repo: settings.repo2, workflow: settings.workflow2 || '', branch: settings.branch2 || '' });
+        }
+        if (settings.repo3) {
+            workflows.push({ repo: settings.repo3, workflow: settings.workflow3 || '', branch: settings.branch3 || '' });
+        }
+        
+        return workflows;
+    },
+    
     async fetchAndDisplayStatus(context, settings) {
         const owner = settings.owner || "";
-        const repo = settings.repo || "";
-        const workflow = settings.workflow || "";
-        const branch = settings.branch || "";
         const token = settings.token || "";
         
-        if (!owner || !repo) {
+        const workflows = this.getConfiguredWorkflows(settings);
+        
+        if (!owner || workflows.length === 0) {
             window.socket.setTitle(context, "Action\n--");
             return;
         }
@@ -312,92 +404,61 @@ plugin.actionstatus = new Actions({
             };
             
             if (token) {
-                headers['Authorization'] = `token ${token}`;
+                // Use Bearer for both fine-grained PATs (github_pat_) and classic PATs (ghp_)
+                headers['Authorization'] = `Bearer ${token}`;
             }
             
-            // Fetch repo info to get owner avatar
+            // Fetch repo info to get owner avatar (use first repo)
             const repoResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}`,
+                `https://api.github.com/repos/${owner}/${workflows[0].repo}`,
                 { headers }
             );
             
+            let avatarUrl = null;
             if (repoResponse.ok) {
                 const repoData = await repoResponse.json();
-                const avatarUrl = repoData.owner?.avatar_url;
-                if (avatarUrl) {
-                    // We'll overlay status on the avatar
-                    const status = await this.getWorkflowStatus(owner, repo, workflow, branch, headers);
-                    this.setStatusImage(context, avatarUrl, status);
-                }
+                avatarUrl = repoData.owner?.avatar_url;
             }
             
-            // Get workflow runs
-            let url = `https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=1`;
-            if (workflow) {
-                url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow}/runs?per_page=1`;
-            }
-            if (branch) {
-                url += `&branch=${encodeURIComponent(branch)}`;
-            }
+            // Fetch status for all configured workflows
+            const statuses = await Promise.all(
+                workflows.map(wf => this.getWorkflowStatus(owner, wf.repo, wf.workflow, wf.branch, headers))
+            );
             
-            const response = await fetch(url, { headers });
+            // Cache statuses for use in keyUp navigation
+            this.cachedStatuses[context] = statuses;
             
-            if (!response.ok) {
-                window.socket.setTitle(context, "Action\nErr");
-                return;
-            }
-            
-            const data = await response.json();
-            const runs = data.workflow_runs || [];
-            
-            if (runs.length === 0) {
-                window.socket.setTitle(context, "Action\nNone");
-                return;
-            }
-            
-            const latestRun = runs[0];
-            const status = latestRun.status;
-            const conclusion = latestRun.conclusion;
-            
-            let displayText = "";
-            if (status === "completed") {
-                switch (conclusion) {
-                    case "success":
-                        displayText = "✓";
-                        break;
-                    case "failure":
-                        displayText = "✗";
-                        break;
-                    case "cancelled":
-                        displayText = "⊘";
-                        break;
-                    case "skipped":
-                        displayText = "⊘";
-                        break;
-                    default:
-                        displayText = conclusion || "?";
-                }
+            // Set the image with status indicators
+            if (avatarUrl) {
+                this.setStatusImage(context, avatarUrl, statuses);
             } else {
-                switch (status) {
-                    case "queued":
-                        displayText = "⏳";
-                        break;
-                    case "in_progress":
-                        displayText = "⟳";
-                        break;
-                    case "waiting":
-                        displayText = "⏳";
-                        break;
-                    default:
-                        displayText = status || "?";
-                }
+                // If no avatar, just set a title based on first status
+                this.setTitleFromStatuses(context, statuses);
             }
             
-            window.socket.setTitle(context, displayText);
         } catch (error) {
             console.error('Error fetching action status:', error);
             window.socket.setTitle(context, "Action\nErr");
         }
+    },
+    
+    setTitleFromStatuses(context, statuses) {
+        // Build a simple title showing status symbols for each workflow
+        const symbols = statuses.map(status => {
+            switch (status) {
+                case 'success': return '✓';
+                case 'failure': return '✗';
+                case 'cancelled':
+                case 'skipped': return '⊘';
+                case 'in_progress':
+                case 'queued':
+                case 'waiting': return '⟳';
+                case 'none': return '-';
+                default: return '?';
+            }
+        });
+        
+        window.socket.setTitle(context, symbols.join(' '));
     },
     
     async getWorkflowStatus(owner, repo, workflow, branch, headers) {
@@ -428,7 +489,8 @@ plugin.actionstatus = new Actions({
         }
     },
     
-    async setStatusImage(context, avatarUrl, status) {
+    async setStatusImage(context, avatarUrl, statuses) {
+        const self = this;
         try {
             // Fetch the image as blob to avoid CORS issues
             const response = await fetch(avatarUrl);
@@ -451,43 +513,42 @@ plugin.actionstatus = new Actions({
                     // Draw avatar scaled to fill the space
                     ctx.drawImage(image, 0, 0, size, size);
                     
-                    // Draw status indicator in bottom-right corner
-                    const indicatorSize = 40;
-                    const indicatorX = size - indicatorSize - 8;
-                    const indicatorY = size - indicatorSize - 8;
+                    // Calculate indicator positions based on number of statuses
+                    // 1 workflow: bottom-right
+                    // 2 workflows: bottom-left, bottom-right
+                    // 3 workflows: bottom-left, bottom-center, bottom-right
+                    const indicatorSize = 32;
+                    const padding = 6;
+                    const bottomY = size - indicatorSize - padding;
                     
-                    // Determine color based on status
-                    let color;
-                    switch (status) {
-                        case 'success':
-                            color = '#28a745'; // Green
-                            break;
-                        case 'failure':
-                            color = '#dc3545'; // Red
-                            break;
-                        case 'cancelled':
-                        case 'skipped':
-                            color = '#6c757d'; // Gray
-                            break;
-                        case 'in_progress':
-                        case 'queued':
-                        case 'waiting':
-                            color = '#ffc107'; // Yellow
-                            break;
-                        default:
-                            color = '#6c757d'; // Gray
+                    let positions = [];
+                    if (statuses.length === 1) {
+                        // Bottom-right only
+                        positions = [
+                            { x: size - indicatorSize - padding, y: bottomY }
+                        ];
+                    } else if (statuses.length === 2) {
+                        // Bottom-left and bottom-right
+                        positions = [
+                            { x: padding, y: bottomY },
+                            { x: size - indicatorSize - padding, y: bottomY }
+                        ];
+                    } else if (statuses.length >= 3) {
+                        // Bottom-left, bottom-center, bottom-right
+                        positions = [
+                            { x: padding, y: bottomY },
+                            { x: (size - indicatorSize) / 2, y: bottomY },
+                            { x: size - indicatorSize - padding, y: bottomY }
+                        ];
                     }
                     
-                    // Draw circle background
-                    ctx.beginPath();
-                    ctx.arc(indicatorX + indicatorSize / 2, indicatorY + indicatorSize / 2, indicatorSize / 2, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                    
-                    // Draw border
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 3;
-                    ctx.stroke();
+                    // Draw each status indicator
+                    statuses.forEach((status, index) => {
+                        if (index < positions.length) {
+                            const pos = positions[index];
+                            self.drawStatusIndicator(ctx, pos.x, pos.y, indicatorSize, status);
+                        }
+                    });
                     
                     // Send the image to Stream Dock
                     window.socket.send(JSON.stringify({
@@ -505,5 +566,43 @@ plugin.actionstatus = new Actions({
         } catch (error) {
             console.error('Error setting status image:', error);
         }
+    },
+    
+    drawStatusIndicator(ctx, x, y, size, status) {
+        // Determine color based on status
+        let color;
+        switch (status) {
+            case 'success':
+                color = '#28a745'; // Green
+                break;
+            case 'failure':
+                color = '#dc3545'; // Red
+                break;
+            case 'cancelled':
+            case 'skipped':
+                color = '#6c757d'; // Gray
+                break;
+            case 'in_progress':
+            case 'queued':
+            case 'waiting':
+                color = '#ffc107'; // Yellow
+                break;
+            case 'none':
+                color = '#6c757d'; // Gray
+                break;
+            default:
+                color = '#6c757d'; // Gray
+        }
+        
+        // Draw circle background
+        ctx.beginPath();
+        ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        
+        // Draw border
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 });
