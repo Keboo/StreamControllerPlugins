@@ -9,7 +9,6 @@ plugin.prcount = new Actions({
         project: "",
         token: "",
         refreshInterval: 5,
-        includeDrafts: false,
         excludeUsers: ""
     },
     intervals: {},
@@ -53,13 +52,9 @@ plugin.prcount = new Actions({
         const settings = this.data[context] || {};
         const org = settings.organization || "";
         const project = settings.project || "";
-        const repo = this.firstMatchingRepo[context] || "";
         
-        if (org && project && repo) {
-            window.socket.openUrl(`https://dev.azure.com/${org}/${project}/_git/${repo}/pullrequests?_a=active`);
-        } else if (org && project) {
-            // Fallback to project-level PR page if no repo found
-            window.socket.openUrl(`https://dev.azure.com/${org}/${project}/_git/pullrequests?_a=active`);
+        if (org && project) {
+            window.socket.openUrl(`https://dev.azure.com/${org}/${project}/_git/pullrequests`);
         }
     },
     
@@ -74,7 +69,6 @@ plugin.prcount = new Actions({
         const project = settings.project || "";
         const token = settings.token || "";
         const excludeUsers = settings.excludeUsers || "";
-        const includeDrafts = settings.includeDrafts || false;
         
         if (!org || !project || !token) {
             window.socket.setTitle(context, "PR\n--");
@@ -110,24 +104,12 @@ plugin.prcount = new Actions({
             const data = await response.json();
             let pullRequests = data.value || [];
             
-            // Filter out draft PRs if not including them
-            if (!includeDrafts) {
-                pullRequests = pullRequests.filter(pr => !pr.isDraft);
-            }
-            
             // Filter out PRs if we have excluded users
             if (excludedUsersList.length > 0) {
                 pullRequests = await this.filterExcludedPRs(pullRequests, excludedUsersList, org, headers);
             }
             
             const count = pullRequests.length;
-            
-            // Store the first matching repo for navigation
-            if (pullRequests.length > 0 && pullRequests[0].repository) {
-                this.firstMatchingRepo[context] = pullRequests[0].repository.name;
-            } else {
-                delete this.firstMatchingRepo[context];
-            }
             
             window.socket.setTitle(context, `PR\n${count}`);
             

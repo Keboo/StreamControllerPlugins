@@ -11,7 +11,6 @@ const $local = false, $back = false, $dom = {
     project: $('#project'),
     token: $('#token'),
     refreshInterval: $('#refreshInterval'),
-    includeDrafts: $('#includeDrafts'),
     excludeUsers: $('#excludeUsers'),
     tokenLink: $('#tokenLink')
 };
@@ -24,7 +23,6 @@ const $propEvent = {
         $dom.project.value = settings.project || '';
         $dom.token.value = settings.token || '';
         $dom.refreshInterval.value = settings.refreshInterval || 5;
-        $dom.includeDrafts.checked = settings.includeDrafts || false;
         $dom.excludeUsers.value = settings.excludeUsers || '';
     },
     sendToPropertyInspector(data) { }
@@ -51,11 +49,6 @@ $dom.refreshInterval.addEventListener('input', $.debounce(function() {
     value = Math.min(60, Math.max(1, value));
     $settings.refreshInterval = value;
 }, 300));
-
-// Save settings when include drafts changes
-$dom.includeDrafts.addEventListener('change', function() {
-    $settings.includeDrafts = $dom.includeDrafts.checked;
-});
 
 // Save settings when exclude users changes
 $dom.excludeUsers.addEventListener('input', $.debounce(function() {
