@@ -37,6 +37,25 @@
       "Tooltip": "Displays the number of open PRs in a GitHub repository",
       "UUID": "com.keboo.github.prcount",
       "PropertyInspectorPath": "propertyInspector/prcount/index.html"
+    },
+    {
+      "Icon": "static/actions-icon",
+      "Name": "Action Status",
+      "States": [
+        {
+          "FontSize": "12",
+          "TitleAlignment": "middle",
+          "Image": "static/actions-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the status of a GitHub Actions workflow",
+      "UUID": "com.keboo.github.actionstatus",
+      "PropertyInspectorPath": "propertyInspector/actionstatus/index.html"
     }
   ],
   "SDKVersion": 1,

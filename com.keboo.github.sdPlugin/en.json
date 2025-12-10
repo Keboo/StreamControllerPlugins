@@ -1,6 +1,6 @@
 {
-  "Name": "Open GitHub Repo",
-  "Description": "A plugin that opens a GitHub repository when pressed",
+  "Name": "Keboo GitHub",
+  "Description": "GitHub integration plugins for Stream Dock",
   "Category": "Keboo GitHub",
   "Actions": {
     "com.keboo.github.action": {
@@ -10,11 +10,17 @@
     "com.keboo.github.prcount": {
       "Name": "PR Count",
       "Tooltip": "Displays the number of open PRs in a GitHub repository"
+    },
+    "com.keboo.github.actionstatus": {
+      "Name": "Action Status",
+      "Tooltip": "Displays the status of a GitHub Actions workflow"
     }
   },
   "PropertyInspector": {
     "Owner": "Owner",
     "Repo": "Repository",
-    "Token": "Token"
+    "Token": "Token",
+    "Workflow": "Workflow",
+    "Branch": "Branch"
   }
 }
