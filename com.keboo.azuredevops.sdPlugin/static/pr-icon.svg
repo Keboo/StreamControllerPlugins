@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="20" fill="#1a1a2e"/>
+  <!-- PR icon for Azure DevOps -->
+  <circle cx="52" cy="52" r="12" fill="none" stroke="#0078d4" stroke-width="4"/>
+  <circle cx="92" cy="52" r="12" fill="none" stroke="#0078d4" stroke-width="4"/>
+  <circle cx="72" cy="100" r="12" fill="none" stroke="#0078d4" stroke-width="4"/>
+  <path d="M52 64 L52 80 L72 88" fill="none" stroke="#0078d4" stroke-width="4" stroke-linecap="round"/>
+  <path d="M92 64 L92 80 L72 88" fill="none" stroke="#0078d4" stroke-width="4" stroke-linecap="round"/>
+</svg>

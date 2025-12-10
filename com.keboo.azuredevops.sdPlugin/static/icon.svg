@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="20" fill="#1a1a2e"/>
+  <!-- Azure DevOps logo representation -->
+  <path d="M36 72 L72 36 L108 72 L72 108 Z" fill="none" stroke="#0078d4" stroke-width="4"/>
+  <circle cx="72" cy="72" r="20" fill="#0078d4"/>
+  <path d="M72 52 L72 92 M52 72 L92 72" stroke="#1a1a2e" stroke-width="4" stroke-linecap="round"/>
+</svg>

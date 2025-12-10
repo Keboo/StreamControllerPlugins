@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Pipeline Status - Property Inspector</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading">Azure DevOps Pipeline Status Settings</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Organization</div>
+            <input class="sdpi-item-value" type="text" id="organization" placeholder="e.g. mycompany">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Project</div>
+            <input class="sdpi-item-value" type="text" id="project" placeholder="e.g. MyProject">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label"><a href="#" id="tokenLink" style="color: #7397d2; text-decoration: none;">PAT</a></div>
+            <input class="sdpi-item-value" type="password" id="token" placeholder="Personal Access Token">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Refresh</div>
+            <input class="sdpi-item-value" type="number" id="refreshInterval" min="1" max="60" placeholder="5" style="max-width: 60px;">
+            <span style="margin-left: 8px; color: #9a9a9a;">minutes (1-60)</span>
+        </div>
+        
+        <!-- Pipeline 1 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Pipeline 1 (Required)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Definition ID</div>
+            <input class="sdpi-item-value" type="text" id="pipeline1" placeholder="e.g. 42">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch1" placeholder="e.g. main (optional)">
+        </div>
+        
+        <!-- Pipeline 2 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Pipeline 2 (Optional)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Definition ID</div>
+            <input class="sdpi-item-value" type="text" id="pipeline2" placeholder="e.g. 43">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch2" placeholder="e.g. main (optional)">
+        </div>
+        
+        <!-- Pipeline 3 -->
+        <div class="sdpi-heading" style="margin-top: 16px;">Pipeline 3 (Optional)</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Definition ID</div>
+            <input class="sdpi-item-value" type="text" id="pipeline3" placeholder="e.g. 44">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Branch</div>
+            <input class="sdpi-item-value" type="text" id="branch3" placeholder="e.g. main (optional)">
+        </div>
+        
+        <div class="sdpi-item" type="group" style="margin-top: 16px;">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <small>Find Pipeline Definition IDs in Azure DevOps → Pipelines → select pipeline → the ID is in the URL (definitionId=XX). PAT needs "Build (Read)" permission. Status indicators: 1 pipeline = bottom-right, 2 = bottom-left + right, 3 = left + center + right.</small>
+            </div>
+        </div>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

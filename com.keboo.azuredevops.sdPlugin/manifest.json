@@ -1,0 +1,65 @@
+{
+  "Actions": [
+    {
+      "Icon": "static/pr-icon",
+      "Name": "PR Count",
+      "States": [
+        {
+          "FontSize": "16",
+          "TitleAlignment": "middle",
+          "Image": "static/pr-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the number of active PRs in an Azure DevOps project",
+      "UUID": "com.keboo.azuredevops.prcount",
+      "PropertyInspectorPath": "propertyInspector/prcount/index.html"
+    },
+    {
+      "Icon": "static/pipeline-icon",
+      "Name": "Pipeline Status",
+      "States": [
+        {
+          "FontSize": "12",
+          "TitleAlignment": "middle",
+          "Image": "static/pipeline-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the status of Azure DevOps pipelines (up to 3)",
+      "UUID": "com.keboo.azuredevops.pipelinestatus",
+      "PropertyInspectorPath": "propertyInspector/pipelinestatus/index.html"
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "Keboo",
+  "Name": "Azure DevOps",
+  "Icon": "static/icon",
+  "CodePath": "plugin/index.html",
+  "Description": "A plugin for Azure DevOps PR counts and pipeline statuses",
+  "Category": "Keboo Azure DevOps",
+  "CategoryIcon": "static/icon",
+  "Version": "1.0.0",
+  "URL": "https://keboo.dev",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "7"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "2.9"
+  }
+}

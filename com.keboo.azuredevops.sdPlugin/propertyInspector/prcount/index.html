@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>PR Count - Property Inspector</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading">Azure DevOps PR Count Settings</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Organization</div>
+            <input class="sdpi-item-value" type="text" id="organization" placeholder="e.g. mycompany">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Project</div>
+            <input class="sdpi-item-value" type="text" id="project" placeholder="e.g. MyProject">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label"><a href="#" id="tokenLink" style="color: #7397d2; text-decoration: none;">PAT</a></div>
+            <input class="sdpi-item-value" type="password" id="token" placeholder="Personal Access Token">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Refresh</div>
+            <input class="sdpi-item-value" type="number" id="refreshInterval" min="1" max="60" placeholder="5" style="max-width: 60px;">
+            <span style="margin-left: 8px; color: #9a9a9a;">minutes (1-60)</span>
+        </div>
+        
+        <div class="sdpi-item" type="checkbox">
+            <div class="sdpi-item-label">Include Drafts</div>
+            <div class="sdpi-item-value">
+                <input type="checkbox" id="includeDrafts">
+                <label for="includeDrafts"><span></span></label>
+            </div>
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Exclude Users</div>
+            <input class="sdpi-item-value" type="text" id="excludeUsers" placeholder="user1, user2, user3">
+        </div>
+        
+        <div class="sdpi-item" type="group">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <small>Comma-separated list of usernames. PRs authored by or already reviewed by these users will be excluded from the count.</small>
+            </div>
+        </div>
+        
+        <div class="sdpi-item" type="group">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <small>Create a Personal Access Token (PAT) at Azure DevOps → User Settings → Personal access tokens. The token needs "Code (Read)" permission to read pull requests.</small>
+            </div>
+        </div>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

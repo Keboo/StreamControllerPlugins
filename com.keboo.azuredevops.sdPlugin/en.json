@@ -1,0 +1,22 @@
+{
+  "Name": "Keboo Azure DevOps",
+  "Description": "Azure DevOps integration plugins for Stream Dock",
+  "Category": "Keboo Azure DevOps",
+  "Actions": {
+    "com.keboo.azuredevops.prcount": {
+      "Name": "PR Count",
+      "Tooltip": "Displays the number of active PRs in an Azure DevOps project"
+    },
+    "com.keboo.azuredevops.pipelinestatus": {
+      "Name": "Pipeline Status",
+      "Tooltip": "Displays the status of Azure DevOps pipelines"
+    }
+  },
+  "PropertyInspector": {
+    "Organization": "Organization",
+    "Project": "Project",
+    "Token": "Personal Access Token",
+    "Pipeline": "Pipeline",
+    "Branch": "Branch"
+  }
+}
