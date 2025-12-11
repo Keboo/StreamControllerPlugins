@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Next Meeting - Property Inspector</title>
+    <link rel="stylesheet" href="../../static/css/sdpi.css">
+</head>
+
+<body>
+    <div class="sdpi-wrapper" style="display: none">
+        <div class="sdpi-heading">Next Meeting Settings</div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">ICS URL</div>
+            <input class="sdpi-item-value" type="url" id="icsUrl" placeholder="https://calendar.example.com/feed.ics">
+        </div>
+        
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Refresh</div>
+            <input class="sdpi-item-value" type="number" id="refreshInterval" min="1" max="60" placeholder="5" style="max-width: 60px;">
+            <span style="margin-left: 8px; color: #9a9a9a;">minutes (1-60)</span>
+        </div>
+        
+        <div class="sdpi-item" type="group">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <small>Enter the ICS/iCal URL for your calendar. This is typically found in your calendar app's sharing or subscription settings.</small>
+            </div>
+        </div>
+        
+        <div class="sdpi-item" type="group">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value">
+                <small><strong>Tip:</strong> Tap the button to see the meeting title scroll, tap again to return to the countdown.</small>
+            </div>
+        </div>
+    </div>
+    <script src="../utils/common.js"></script>
+    <script src="../utils/action.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

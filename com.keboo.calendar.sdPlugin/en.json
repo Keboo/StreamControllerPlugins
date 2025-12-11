@@ -1,0 +1,15 @@
+{
+  "Name": "Keboo Calendar",
+  "Description": "Calendar integration plugins for Stream Dock",
+  "Category": "Keboo Calendar",
+  "Actions": {
+    "com.keboo.calendar.nextmeeting": {
+      "Name": "Next Meeting",
+      "Tooltip": "Shows time until your next meeting. Tap to see the meeting title."
+    }
+  },
+  "PropertyInspector": {
+    "IcsUrl": "ICS URL",
+    "RefreshInterval": "Refresh Interval"
+  }
+}
